@@ -16,16 +16,16 @@ func binaryMaxGap(where number: Int) -> Int {
     let binaryString = String(number, radix: 2)
     var indexListOfOne: [Int] = indices(of: "1", where: binaryString)
 
-    var maxCount = 0
-    var index = indexListOfOne.count - 1
+    var maxCount: Int = 0
+    let lastIndex: Int = indexListOfOne.count - 1
+    let reversed: Int = -1
 
-    while index >= 1 {
+
+    for index in stride(from: lastIndex, to: 1, by: reversed) {
         let post = indexListOfOne[index]
         let prev = indexListOfOne[index-1]
         maxCount = max(post-prev-1, maxCount)
-        index -= 1
     }
-
     return maxCount
 }
 
