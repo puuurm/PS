@@ -2,29 +2,39 @@ import Cocoa
 
 public func solution(_ S : inout String, _ P : inout [Int], _ Q : inout [Int]) -> [Int] {
 
-    let map: Dictionary<Character, Int> = ["A": 1, "C": 2, "G": 3, "T": 4]
-
-    let sequence = Set(S)
-    if sequence.count == 1, let character = sequence.first, let mapValue = map[character] {
-        return Array(repeating: mapValue, count: P.count)
-    }
-
     var result: [Int] = []
-    for index in 0..<P.count {
-        let start = String.Index(encodedOffset: P[index])
-        let end = String.Index(encodedOffset: Q[index])
-        let sequence = Set(S[start...end])
-        var minimum = Int.max
 
-        for character in sequence {
-            guard let mapValue = map[character] else { continue }
-            minimum = min(minimum, mapValue)
+    let aList: [Int] = countChange(of: "A", where: S)
+    let cList: [Int] = countChange(of: "C", where: S)
+    let gList: [Int] = countChange(of: "G", where: S)
+
+    for (p, q) in zip(P, Q) {
+        let q = q+1
+        let appearance = [aList[q]-aList[p], cList[q]-cList[p], gList[q]-gList[p]]
+        if appearance[0] > 0 {
+            result.append(1)
+        } else if appearance[1] > 0 {
+            result.append(2)
+        }  else if appearance[2] > 0 {
+            result.append(3)
+        }  else {
+            result.append(4)
         }
 
-        result.append(minimum)
     }
-
     return result
+}
+
+func countChange(of character: Character, where string: String) -> [Int] {
+    var changeList: [Int] = [0]
+    for (index, dnaCharacter) in string.enumerated() {
+        if dnaCharacter == character {
+            changeList.append(changeList[index]+1)
+        } else {
+            changeList.append(changeList[index])
+        }
+    }
+    return changeList
 }
 
 var P = [1,2,3]
