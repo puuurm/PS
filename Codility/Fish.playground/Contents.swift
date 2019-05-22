@@ -7,19 +7,15 @@ public func solution(_ A : inout [Int], _ B : inout [Int]) -> Int {
 
     for index in 0..<A.count {
         if B[index] == 0 {
+            while !downStrems.isEmpty {
+                if downStrems.last! > A[index] {
+                    break
+                } else {
+                    downStrems.removeLast()
+                }
+            }
             if downStrems.isEmpty {
                 aliveCount += 1
-            } else {
-                while !downStrems.isEmpty {
-                    if downStrems.last! > A[index] {
-                        break
-                    } else {
-                        downStrems.removeLast()
-                    }
-                }
-                if downStrems.isEmpty {
-                    aliveCount += 1
-                }
             }
         } else {
             downStrems.append(A[index])
