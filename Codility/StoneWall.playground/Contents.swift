@@ -8,29 +8,35 @@ public func solution(_ H : inout [Int]) -> Int {
     for index in 0..<count {
         let value: Int = H[index]
 
-        if stack.isEmpty {
+        guard let last = stack.last, last >= value else {
             stack.append(value)
             result += 1
+            continue
         }
 
-        if let last = stack.last {
-            if last > value {
-                if stack.contains(value) {
-                    while !stack.isEmpty {
-                        let lastInStack = stack.removeLast()
-                        if lastInStack == value {
-                            break
-                        }
-                    }
-                } else {
+        if last > value {
+            while true {
+                guard let lastInStack = stack.last
+                else {
+                    stack.append(value)
                     result += 1
+                    break
                 }
-            } else if last < value {
-                stack.append(value)
-                result += 1
+
+                if lastInStack > value {
+                    stack.removeLast()
+                } else {
+                    if lastInStack < value {
+                        stack.append(value)
+                        result += 1
+                    }
+                    break
+                }
             }
         }
-
     }
     return result
 }
+
+var list = [2, 5, 1, 4, 6, 7, 9, 10, 1]
+solution(&list)
