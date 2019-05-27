@@ -3,32 +3,28 @@ import Cocoa
 public func solution(_ A : inout [Int]) -> Int {
     let count: Int = A.count
     let half: Int = count/2
-    let sortedA: [Int] = A.sorted()
 
-    var countValue: Int = 0
-    var dominator: Int = Int.max
-    var prevValue: Int = Int.max
+    var countList: [Int: Int] = [:]
+
     for index in 0..<count {
-        let currentValue: Int = sortedA[index]
-        if prevValue != currentValue {
-            prevValue = currentValue
-            countValue = 1
-        } else {
-            countValue += 1
-        }
+        let key: Int = A[index]
+        countList.update(for: key)
 
-        if countValue > half {
-            dominator = currentValue
-            break
-        }
-    }
-
-    if dominator != Int.max {
-        for index in 0..<count
-            where A[index] == dominator {
+        if countList[key]! > half {
             return index
         }
     }
-
     return -1
+}
+
+extension Dictionary where Key == Int, Value == Int {
+
+    mutating func update(for key: Int) {
+        if let value = self[key] {
+            updateValue(value+1, forKey: key)
+        } else {
+            updateValue(1, forKey: key)
+        }
+    }
+
 }
