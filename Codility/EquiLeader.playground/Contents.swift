@@ -6,37 +6,48 @@ public func solution(_ A : inout [Int]) -> Int {
 
     for index in 0..<A.count {
         let key: Int = A[index]
-        if let value = rightList[key] {
-            rightList.updateValue(value+1, forKey: key)
-        } else {
-            rightList.updateValue(1, forKey: key)
-        }
+        rightList.update(for: key)
     }
 
-    var numberOfEquiLeader: Int = 0
+    var equiLeaderCount: Int = 0
     var leader: Int = A[0]
 
     for index in 0..<A.count {
         let key: Int = A[index]
         rightList[key]! -= 1
-        if let value = leftList[key] {
-            leftList.updateValue(value+1, forKey: key)
-        } else {
-            leftList.updateValue(1, forKey: key)
-        }
+        leftList.update(for: key)
 
         if index == 0 || leftList[leader]! < leftList[key]! {
             leader = A[index]
         }
 
+        let leftCount: Int = index+1
+        let halfLeftCount: Int = leftCount/2
+        let rightCount: Int = A.count - leftCount
+        let halfRightCount: Int = rightCount/2
 
-        if (index+1) / 2 < leftList[leader]! && (A.count - (index+1)) / 2 < rightList[leader]! {
-            numberOfEquiLeader += 1
+
+        if halfLeftCount < leftList[leader]!
+            && halfRightCount < rightList[leader]! {
+            equiLeaderCount += 1
         }
     }
 
-
-
-    return numberOfEquiLeader
+    return equiLeaderCount
 
 }
+
+extension Dictionary where Key == Int, Value == Int {
+
+    mutating func update(for key: Int) {
+        if let value = self[key] {
+            updateValue(value+1, forKey: key)
+        } else {
+            updateValue(1, forKey: key)
+        }
+    }
+
+}
+
+var A = [3,4,4,4,4,2]
+print(solution(&A))
